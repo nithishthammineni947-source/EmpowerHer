@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EmpowerHER</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#f5f2fa;--card:#fff;--ink:#231f3b;--mute:#6b6785;--line:#e0dbee;--brand:#4b3f9e;--brand-ink:#fff;--sos:#d6293e;--low:#2f8f5b;--med:#c98a0b;--high:#d6293e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15132a;--card:#1f1c3a;--ink:#ece9fa;--mute:#a29fc0;--line:#34305a;--brand:#9d90ff;--brand-ink:#15132a}}
+:root[data-theme="dark"]{--bg:#15132a;--card:#1f1c3a;--ink:#ece9fa;--mute:#a29fc0;--line:#34305a;--brand:#9d90ff;--brand-ink:#15132a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'DM Sans',system-ui,sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0 0 .4em;line-height:1.15}
+h1{font-size:clamp(1.9rem,5vw,2.8rem)}h2{font-size:1.4rem}h3{font-size:1.05rem}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.logo{font-family:Fraunces,serif;font-weight:700;font-size:1.3rem}
+.sub{color:var(--mute);max-width:60ch;margin:0 0 20px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:99px;font:inherit;font-weight:500;cursor:pointer;white-space:nowrap}
+.tab[aria-selected=true]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+textarea,input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px}
+textarea{min-height:130px;resize:vertical}
+label{display:block;font-weight:500;margin:12px 0 5px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:11px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.badge{display:inline-block;padding:3px 12px;border-radius:99px;color:#fff;font-weight:700;font-size:.9rem}
+.low{background:var(--low)}.medium{background:var(--med)}.high{background:var(--high)}
+.bars{display:grid;gap:8px;margin:12px 0}
+.bar{display:grid;grid-template-columns:150px 1fr 44px;gap:10px;align-items:center;font-size:.9rem}
+.bar i{display:block;height:10px;border-radius:6px;background:var(--brand)}
+.bar div{background:var(--line);border-radius:6px}
+.legal{border-left:4px solid var(--brand);padding:2px 0 2px 14px;margin:12px 0}
+.legal b{display:block}
+.mute{color:var(--mute);font-size:.88rem}
+.sos{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--sos);color:#fff;border:0;border-radius:99px;padding:16px 26px;font-weight:700;font-size:1.05rem;box-shadow:0 6px 20px rgba(214,41,62,.45);z-index:5}
+.modal{position:fixed;inset:0;background:rgba(10,8,25,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal.on{display:flex}
+.modal .card{max-width:480px;width:100%;margin:0}
+.decoy{position:fixed;inset:0;background:#fff;color:#222;z-index:20;display:none;padding:24px;font-family:system-ui}
+.decoy.on{display:block}
+.contact{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:8px 0}
+.hidden{display:none}
+@media(max-width:520px){.bar{grid-template-columns:100px 1fr 40px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">EmpowerHER</div>
+    <button class="btn ghost" id="theme" aria-label="Toggle theme">Theme</button>
+  </header>
+  <h1>Say what happened. We'll help with what to do next.</h1>
+  <p class="sub">Describe an incident in your own words, by typing or speaking. EmpowerHER identifies the type of abuse, rates how urgent it is, and shows the laws and helplines that apply.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="report">Report</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="contacts">Trusted contacts</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="about">How it works</button>
+  </div>
+
+  <section id="report">
+    <div class="card">
+      <label for="txt">What happened?</label>
+      <textarea id="txt" placeholder="Example: My manager keeps sending me inappropriate messages and said my promotion depends on going out with him."></textarea>
+      <label for="more">Anything else you want to add? (optional)</label>
+      <textarea id="more" style="min-height:70px" placeholder="Who, where, how often, whether it is happening right now"></textarea>
+      <label for="city">Your state / city</label>
+      <input id="city" value="Karnataka" placeholder="e.g. Karnataka">
+      <div class="row">
+        <button class="btn" id="go">Analyse report</button>
+        <button class="btn ghost" id="mic">Speak instead</button>
+        <button class="btn ghost" id="clr">Clear</button>
+        <span class="mute" id="micmsg"></span>
+      </div>
+    </div>
+    <div id="out" class="card hidden"></div>
+  </section>
+
+  <section id="contacts" class="hidden">
+    <div class="card">
+      <h2>Trusted contacts</h2>
+      <p class="mute">Saved only in this browser. They receive your live location link when you press SOS.</p>
+      <div id="clist"></div>
+      <label for="cn">Name</label><input id="cn">
+      <label for="cp">Phone (with country code, e.g. 919876543210)</label><input id="cp" inputmode="tel">
+      <div class="row"><button class="btn" id="cadd">Add contact</button></div>
+    </div>
+  </section>
+
+  <section id="about" class="hidden">
+    <div class="card">
+      <h2>How it works</h2>
+      <p>Your text is cleaned (lowercased, stopwords removed), converted to TF-IDF vectors, and passed to two linear SVMs trained in your browser using the Pegasos algorithm: one predicts the abuse category, the other predicts severity (low, medium, high). A high-risk keyword check can raise severity, and the category then selects the matching legal sections for your region.</p>
+      <p class="mute">The training set here is a small demo set written for this prototype. A real deployment would train on a larger labelled dataset. Legal information is general guidance, not legal advice.</p>
+      <div class="row"><button class="btn ghost" id="metrics">Show training accuracy</button></div>
+      <p id="macc" class="mute"></p>
+    </div>
+  </section>
+</div>
+
+<button class="sos" id="sosbtn">SOS</button>
+
+<div class="modal" id="sosm" role="dialog" aria-modal="true" aria-labelledby="st">
+  <div class="card">
+    <h2 id="st">Send emergency alert</h2>
+    <p id="sosinfo" class="mute">Getting your location…</p>
+    <div id="soslinks"></div>
+    <div class="row">
+      <a class="btn" href="tel:112" style="text-decoration:none">Call 112</a>
+      <button class="btn ghost" id="silent">Silent mode</button>
+      <button class="btn ghost" id="sosx">Close</button>
+    </div>
+  </div>
+</div>
+<div class="decoy" id="decoy"><h2 style="font-family:system-ui">Notes</h2><p>Meeting agenda, groceries, call plumber.</p><p style="color:#999;margin-top:60px;font-size:.8rem">Triple-tap anywhere to return.</p></div>
+
+<script>
+/* ---------- Training data (demo set) ---------- */
+const CAT={
+"Domestic violence":["my husband hits me and beats me when he is drunk","in laws demand dowry and torture me at home","he locks me in the house and does not let me meet family","my partner slaps and abuses me every day at home","husband controls my money and threatens to throw me out","he beat me last night and i am scared to go home","my husband and his family harass me for more dowry","he pushes me and throws things at me during fights at home"],
+"Workplace harassment":["my manager keeps making inappropriate comments at the office","boss said my promotion depends on going out with him","a colleague touches me at work and makes sexual jokes","my supervisor sends me inappropriate messages and threatens my job","coworker keeps staring and passing lewd remarks in the office","hr ignored my complaint about my boss harassing me at work","senior at the company asks for sexual favours for a raise","he corners me in the office cabin and makes me uncomfortable"],
+"Cyberstalking":["someone keeps messaging me from fake accounts online","he is tracking my phone and posting my photos on social media","a stranger hacked my instagram and threatens to leak my pictures","ex boyfriend blackmails me with private photos online","anonymous person sends me abusive messages every day on whatsapp","someone created a fake profile with my photos and morphed images","he monitors my location and online activity and comments constantly","i receive threatening emails and dms from an unknown account"],
+"Street harassment":["a man followed me from the bus stop and shouted obscene things","strangers passed vulgar comments on the road while i walked","someone groped me in a crowded metro","a group of men teased and followed me home from college","he touched me inappropriately in the public bus","a man kept staring and following me in the market","men on a bike catcalled and chased me on the street","someone grabbed me in the crowd at the station"]};
+const SEV={
+low:["he made an uncomfortable comment once","someone was rude and made a rude joke","a few annoying messages but nothing serious","he stared at me and made me feel awkward","a stranger commented on my clothes","received an unwanted message online once","coworker made an inappropriate joke","he whistled at me on the street"],
+medium:["he keeps sending messages every day and will not stop","my boss repeatedly touches my shoulder and comments on my body","someone is following me regularly after work","he keeps calling and threatening to post my photos","coworker harasses me every week and hr ignores it","he shouts and abuses me often at home","strangers followed me and passed vulgar remarks for days","fake account keeps posting about me and blackmail attempts"],
+high:["he beats me badly and i am bleeding and scared for my life","he threatened to kill me and has a knife","i am being attacked right now please help","he forced himself on me and i was raped","he locked me in a room and is hitting me","he has a weapon and says he will hurt me tonight","i am in danger he is outside my door and trying to break in","he strangled me and i cannot breathe"]};
+const DANGER=/\b(kill|knife|weapon|gun|rape|raped|strangle|strangled|bleeding|acid|right now|break in|life in danger|suicide)\b/i;
+
+/* ---------- TF-IDF + linear SVM (Pegasos) ---------- */
+const STOP=new Set("a an the and or but is am are was were be been to of in on at for with from by my me i he she it they them his her him our we you your this that these those as so not no do does did have has had will would can could just very also than then there here when while who what which into out up down over under about after before again".split(" "));
+const tok=s=>(s.toLowerCase().match(/[a-z']+/g)||[]).filter(w=>!STOP.has(w)&&w.length>1);
+function buildModel(sets){
+  const docs=[],labels=[];
+  for(const k in sets)sets[k].forEach(t=>{docs.push(tok(t));labels.push(k)});
+  const vocab={},df={};
+  docs.forEach(d=>new Set(d).forEach(w=>{df[w]=(df[w]||0)+1}));
+  Object.keys(df).forEach((w,i)=>vocab[w]=i);
+  const N=docs.length,V=Object.keys(vocab).length;
+  const idf=new Float64Array(V);for(const w in vocab)idf[vocab[w]]=Math.log((1+N)/(1+df[w]))+1;
+  const vec=d=>{const v=new Float64Array(V);d.forEach(w=>{if(w in vocab)v[vocab[w]]+=1});let n=0;for(let i=0;i<V;i++){v[i]*=idf[i];n+=v[i]*v[i]}n=Math.sqrt(n)||1;for(let i=0;i<V;i++)v[i]/=n;return v};
+  const X=docs.map(vec),classes=Object.keys(sets),W={};
+  classes.forEach(c=>{
+    const w=new Float64Array(V+1);let t=0,lam=0.01,seed=7;
+    const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+    for(let e=0;e<4000;e++){
+      const i=Math.floor(rnd()*N),y=labels[i]===c?1:-1;t++;const eta=1/(lam*t);
+      let s=w[V];for(let j=0;j<V;j++)s+=w[j]*X[i][j];
+      for(let j=0;j<V;j++)w[j]*=(1-eta*lam);
+      if(y*s<1){for(let j=0;j<V;j++)w[j]+=eta*y*X[i][j]/1;w[V]+=eta*y*0.1}
+    }W[c]=w;
+  });
+  const score=text=>{const v=vec(tok(text));const o={};classes.forEach(c=>{let s=W[c][V];for(let j=0;j<V;j++)s+=W[c][j]*v[j];o[c]=s});return o};
+  const acc=()=>{let ok=0;docs.forEach((d,i)=>{const s=score(d.join(" "));if(classes.reduce((a,b)=>s[a]>s[b]?a:b)===labels[i])ok++});return ok/N};
+  return{score,acc,N,V};
+}
+const catM=buildModel(CAT),sevM=buildModel(SEV);
+const softmax=o=>{const k=Object.keys(o),m=Math.max(...k.map(x=>o[x])),e=k.map(x=>Math.exp((o[x]-m)*3)),s=e.reduce((a,b)=>a+b);return k.map((x,i)=>[x,e[i]/s]).sort((a,b)=>b[1]-a[1])};
+
+/* ---------- Legal mapping (India; BNS 2023) ---------- */
+const LAW={
+"Domestic violence":{laws:[["Protection of Women from Domestic Violence Act, 2005","Protection orders, residence rights and monetary relief, filed through a Protection Officer or magistrate."],["BNS Section 85","Cruelty by husband or his relatives, including harassment linked to dowry."],["Dowry Prohibition Act, 1961","Demanding or giving dowry is an offence."]],help:["181 Women Helpline","112 Emergency","Nearest One Stop Centre (Sakhi)"],steps:["Move to a safe place if you can and keep your phone charged.","Photograph injuries and keep medical records.","Call 181 or reach a Protection Officer to file a Domestic Incident Report."]},
+"Workplace harassment":{laws:[["POSH Act, 2013","Every workplace with 10+ staff must have an Internal Committee; complaint within 3 months of the incident."],["BNS Section 75","Sexual harassment, including unwelcome advances and demands for sexual favours."],["BNS Section 79","Word, gesture or act intended to insult a woman's modesty."]],help:["Your company's Internal Committee","Local Complaints Committee (district)","SHe-Box portal (shebox.wcd.gov.in)"],steps:["Write down dates, places, witnesses and keep messages and emails.","File a written complaint with the Internal Committee.","If there is no committee, approach the district Local Complaints Committee."]},
+"Cyberstalking":{laws:[["BNS Section 78","Stalking, including monitoring a woman's online activity or repeated contact despite disinterest."],["IT Act Section 66E and 67","Violation of privacy and publishing obscene material electronically."],["BNS Section 77","Voyeurism, covering capturing or sharing private images without consent."]],help:["1930 National Cyber Crime Helpline","cybercrime.gov.in","StopNCII.org to block image sharing"],steps:["Take screenshots with usernames, links and timestamps. Do not delete anything.","Report the account on the platform and block it.","File a complaint at cybercrime.gov.in or call 1930."]},
+"Street harassment":{laws:[["BNS Section 74","Assault or criminal force with intent to outrage a woman's modesty."],["BNS Section 78","Stalking, including following a woman repeatedly."],["BNS Section 79","Words or gestures intended to insult modesty."]],help:["112 Emergency","1091 Women in Distress","Nearest police station (Zero FIR possible)"],steps:["Move towards a crowded, lit place and note vehicle numbers or descriptions.","Call 112 or 1091.","You can file a Zero FIR at any police station regardless of jurisdiction."]}};
+
+/* ---------- UI ---------- */
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let lastHigh=false;
+function analyse(){
+  const text=$("txt").value.trim(),more=$("more").value.trim();
+  if(text.length<10){$("out").className="card";$("out").innerHTML="<p>Please describe what happened in at least a sentence so the analysis has something to work with.</p>";return}
+  const full=text+" "+more;
+  const cats=softmax(catM.score(full)),cat=cats[0][0];
+  const sevs=softmax(sevM.score(full));let sev=sevs[0][0],raised=false;
+  if(DANGER.test(full)&&sev!=="high"){sev="high";raised=true}
+  lastHigh=sev==="high";
+  const L=LAW[cat],city=esc($("city").value||"your region");
+  $("out").className="card";
+  $("out").innerHTML=`<h2>${cat} <span class="badge ${sev}">${sev[0].toUpperCase()+sev.slice(1)} severity</span></h2>
+  ${sev==="high"?`<p><b>This looks urgent.</b> If you are in danger now, press SOS or call 112.</p>`:""}
+  ${raised?`<p class="mute">Severity was raised because the report mentions a high-risk word.</p>`:""}
+  <h3>Category confidence</h3><div class="bars">${cats.map(([n,p])=>`<div class="bar"><span>${n}</span><div><i style="width:${Math.round(p*100)}%"></i></div><span>${Math.round(p*100)}%</span></div>`).join("")}</div>
+  <h3>Laws that may apply in ${city}</h3>${L.laws.map(l=>`<div class="legal"><b>${l[0]}</b>${l[1]}</div>`).join("")}
+  <h3>Suggested next steps</h3><ol>${L.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+  <h3>Who to contact</h3><ul>${L.help.map(h=>`<li>${h}</li>`).join("")}</ul>
+  <p class="mute">General legal information for India, not legal advice. Section numbers follow the Bharatiya Nyaya Sanhita, 2023. Check with a lawyer or legal aid authority for your case.</p>
+  <div class="row"><button class="btn" onclick="openSOS()">Send SOS now</button></div>`;
+  $("out").scrollIntoView({behavior:"smooth"});
+}
+$("go").onclick=analyse;
+$("clr").onclick=()=>{$("txt").value="";$("more").value="";$("out").className="card hidden"};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t===b));
+  ["report","contacts","about"].forEach(p=>$(p).classList.toggle("hidden",p!==b.dataset.p));
+});
+$("theme").onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--bg").trim()==="#15132a";r.dataset.theme=d?"light":"dark"};
+$("metrics").onclick=()=>$("macc").textContent=`Category SVM: ${(catM.acc()*100).toFixed(0)}% on ${catM.N} training reports (${catM.V} features). Severity SVM: ${(sevM.acc()*100).toFixed(0)}% on ${sevM.N} reports (${sevM.V} features). Training accuracy only; no held-out test set in this demo.`;
+
+/* voice */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec;
+$("mic").onclick=()=>{
+  if(!SR){$("micmsg").textContent="Voice input is not supported in this browser. Try Chrome.";return}
+  if(rec){rec.stop();return}
+  rec=new SR();rec.lang="en-IN";rec.interimResults=false;rec.continuous=true;
+  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)$("txt").value+=(($("txt").value?" ":"")+e.results[i][0].transcript)};
+  rec.onerror=e=>{$("micmsg").textContent="Microphone error: "+e.error};
+  rec.onend=()=>{rec=null;$("mic").textContent="Speak instead";$("micmsg").textContent=""};
+  rec.start();$("mic").textContent="Stop recording";$("micmsg").textContent="Listening…";
+};
+
+/* contacts */
+let contacts=[];
+try{contacts=JSON.parse(localStorage.getItem("eh_contacts")||"[]")}catch(e){}
+const saveC=()=>{try{localStorage.setItem("eh_contacts",JSON.stringify(contacts))}catch(e){}};
+function renderC(){$("clist").innerHTML=contacts.length?contacts.map((c,i)=>`<div class="contact"><span>${esc(c.n)} <span class="mute">${esc(c.p)}</span></span><button class="btn ghost" onclick="delC(${i})">Remove</button></div>`).join(""):'<p class="mute">No contacts yet. Add at least one person you trust.</p>'}
+window.delC=i=>{contacts.splice(i,1);saveC();renderC()};
+$("cadd").onclick=()=>{const n=$("cn").value.trim(),p=$("cp").value.replace(/\D/g,"");if(!n||p.length<8)return;contacts.push({n,p});saveC();renderC();$("cn").value=$("cp").value=""};
+renderC();
+
+/* SOS */
+window.openSOS=()=>{
+  $("sosm").classList.add("on");$("soslinks").innerHTML="";$("sosinfo").textContent="Getting your location…";
+  const done=(lat,lng)=>{
+    const link=lat!=null?`https://maps.google.com/?q=${lat},${lng}`:"";
+    const msg=encodeURIComponent("EMERGENCY: I need help. "+(link?"My live location: "+link:"I could not get my location, please call me now."));
+    $("sosinfo").textContent=link?"Location found. Send it to your trusted contacts:":"Location unavailable. You can still alert your contacts:";
+    $("soslinks").innerHTML=contacts.length?contacts.map(c=>`<div class="contact"><span>${esc(c.n)}</span><span><a href="https://wa.me/${c.p}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a> &nbsp; <a href="sms:+${c.p}?body=${msg}">SMS</a></span></div>`).join(""):'<p>No trusted contacts saved. Add some in the Trusted contacts tab, or call 112.</p>';
+  };
+  try{navigator.geolocation.getCurrentPosition(p=>done(p.coords.latitude,p.coords.longitude),()=>done(null,null),{enableHighAccuracy:true,timeout:8000})}catch(e){done(null,null)}
+};
+$("sosbtn").onclick=openSOS;$("sosx").onclick=()=>$("sosm").classList.remove("on");
+$("silent").onclick=()=>{$("sosm").classList.remove("on");$("decoy").classList.add("on")};
+let taps=[];$("decoy").onclick=()=>{const n=Date.now();taps=taps.filter(t=>n-t<900);taps.push(n);if(taps.length>=3){$("decoy").classList.remove("on");taps=[]}};
+</script>
+</body>
+</html>
